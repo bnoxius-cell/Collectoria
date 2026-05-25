@@ -2,7 +2,7 @@ local ShelfManager = {}
 
 local CS = game:GetService("CollectionService")
 
-function ShelfManager.init()
+function ShelfManager:start()
 	local buyShelfPrompt = CS:GetTagged("BuyPrompt")
 
 	for _, prompt in ipairs(buyShelfPrompt) do

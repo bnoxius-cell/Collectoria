@@ -11,8 +11,12 @@ local function assignPlot(player)
 	local plots = game.Workspace:WaitForChild("Plots")
 
 	for _, plot in ipairs(plots:GetChildren()) do
-		local plotOwner = plot:WaitForChild("Values"):WaitForChild("OwnerValue")
-		if plotOwner.Value then
+		local valuesFolder = plot:FindFirstChild("Values")
+		if not valuesFolder then
+			continue
+		end
+		local plotOwner = valuesFolder:FindFirstChild("OwnerValue")
+		if not plotOwner then
 			continue
 		end
 
@@ -23,7 +27,7 @@ local function assignPlot(player)
 	end
 end
 
-function PlotOwnership.init()
+function PlotOwnership:start()
 	-- call the function upon player join
 	players.PlayerAdded:Connect(assignPlot)
 

@@ -1,6 +1,6 @@
-local dataManager = require(script.Parent.DataManager)
-local plotManager = require(script.Parent.PlotManager)
+local dataManager = require(script.Parent.dataManager)
+local plotManager = require(script.Parent.plotManager)
 
-dataManager.init()
+dataManager:start()
 
-plotManager.init()
+plotManager:start()

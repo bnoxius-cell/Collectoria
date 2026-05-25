@@ -14,7 +14,7 @@ local function createLeaderstats(player)
 	player:SetAttribute("hasPlot", false)
 end
 
-function Leaderstats.start()
+function Leaderstats:start()
 	players.PlayerAdded:Connect(createLeaderstats)
 
 	for _, player in ipairs(players:GetChildren()) do

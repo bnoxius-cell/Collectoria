@@ -2,8 +2,8 @@ local DataManager = {}
 
 local leaderstats = require(script.leaderstats)
 
-function DataManager.init()
-	leaderstats.init()
+function DataManager:start()
+	leaderstats:start()
 end
 
 return DataManager
