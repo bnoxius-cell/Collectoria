@@ -1,25 +1,32 @@
-local plots = game.Workspace:WaitForChild("Plots")
 local CollectionService = game:GetService("CollectionService")
 local player = game.Players.LocalPlayer
 
-for _, plot in ipairs(plots:GetChildren()) do
-	local valuesFolder = plot:FindFirstChild("Values")
-	if not valuesFolder then continue end
+-- This function runs whenever a BuyPrompt is found or finishes loading
+local function setupBuyPrompt(prompt)
+    -- Find the specific 'Plot' folder this prompt belongs to
+    local plot = prompt:FindFirstAncestor("Plot")
+    if not plot then return end
+    
+    -- Find the OwnerValue inside this specific plot
+    local ownerValue = plot:FindFirstChild("OwnerValue", true)
+    if not ownerValue then return end
 
-	local plotOwner = valuesFolder:FindFirstChild("OwnerValue")
-	if not plotOwner then continue end
-	if not plotOwner.Value then continue end
+    -- Function to enable/disable based on ownership
+    local function updatePromptState()
+        prompt.Enabled = (ownerValue.Value == player)
+    end
 
-	local promptsFolder = plot:FindFirstChild("Prompts")
-	if not promptsFolder then continue end 
+    -- Run it once immediately
+    updatePromptState()
 
-	for _, prompt in ipairs(promptsFolder:GetChildren()) do
-		if prompt:IsA("ProximityPrompt") and CollectionService:HasTag(prompt, "BuyPrompt") then
-			-- TODO: Check if the player is the owner of the plot, if yes then enable the prompt
-			if plotOwner.Value == player then
-				print("YESS")
-				prompt.Enabled = true
-			end
-		end
-	end
+    -- Automatically update if the plot is bought/sold later!
+    ownerValue:GetPropertyChangedSignal("Value"):Connect(updatePromptState)
 end
+
+-- 1. Handle any prompts that are ALREADY loaded when the script runs
+for _, prompt in ipairs(CollectionService:GetTagged("BuyPrompt")) do
+    setupBuyPrompt(prompt)
+end
+
+-- 2. Handle prompts that load LATE due to lag or StreamingEnabled (Fixes the {} issue!)
+CollectionService:GetInstanceAddedSignal("BuyPrompt"):Connect(setupBuyPrompt)

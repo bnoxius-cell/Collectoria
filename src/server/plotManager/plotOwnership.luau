@@ -28,11 +28,8 @@ local function assignPlot(player)
 end
 
 function PlotOwnership:start()
-	-- call the function upon player join
 	players.PlayerAdded:Connect(assignPlot)
 
-	-- catch the players already in the game before the script runs
-	-- this is most likely when a new server starts
 	for _, player in ipairs(players:GetChildren()) do
 		assignPlot(player)
 	end
